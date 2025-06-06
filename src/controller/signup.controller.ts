@@ -1,11 +1,11 @@
 import { signupUser } from "../service/signup.service";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import pool from "../config/pgDatabase/dbConnect";
 import transporter from "../utils/transporter";
 
-export const signup = async (req: Request, res: Response): Promise<Response> => {
+export const signup = async (req: Request, res: Response) => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
@@ -67,7 +67,7 @@ export const signup = async (req: Request, res: Response): Promise<Response> => 
 };
 
 
-export const verifyEmail = async (req: Request, res: Response) => {
+export const verifyEmail = async (req: Request, res: Response)  => {
   const { emailVerifyToken } = req.query;
   if (!emailVerifyToken) {
     return res.status(400).send({ status: "error", message: "Missing token" });

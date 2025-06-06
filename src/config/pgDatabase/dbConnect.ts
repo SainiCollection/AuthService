@@ -14,7 +14,7 @@ dotenv.config();
 
 // create a new pool instance for supabase Postgres database connection
 const pool= new Pool({
-  connectionString: process.env.NEON_DB_URL,
+  connectionString: process.env.RENDER_DB_URL,
   ssl:{
     rejectUnauthorized: false,
   }
@@ -23,7 +23,7 @@ const pool= new Pool({
 pool
   .connect()
   .then(() => {
-    console.log("Connected to Neon Postgres DB Successfully!");
+    console.log("Connected to Render Postgres DB Successfully!");
     userTable();
   })
   .catch((error) => {
