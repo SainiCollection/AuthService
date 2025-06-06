@@ -91,7 +91,7 @@ const router = Router();
  *                 status:
  *                   type: string
  *                   example: error
- *                 messgae:
+ *                 message:
  *                   type: string
  *                   example: Internal server error
  */
@@ -181,7 +181,7 @@ router.post("/api/v1/auth/deactivate-account", deactivateUserAccount);
  *                 status:
  *                   type: string
  *                   example: error
- *                 messgae:
+ *                 message:
  *                   type: string
  *                   example: Internal server error
  */
