@@ -12,7 +12,7 @@ const options = {
     },
     servers: [
       {
-        url: `${process.env.BASE_URL_SERVER}/api/v1/auth`,
+        url: `${process.env.BASE_URL_SERVER}`,
       },
     ],
   },
