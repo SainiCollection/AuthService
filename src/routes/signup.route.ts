@@ -25,6 +25,7 @@ const router = Router();
  *               - lastName
  *               - email
  *               - password
+ *               - app_name
  *             properties:
  *               firstName:
  *                 type: string
@@ -40,6 +41,9 @@ const router = Router();
  *                 type: string
  *                 format: password
  *                 example: Password123!
+ *              app_name:
+ *                type: string
+ *               example: MyApp
  *     responses:
  *       201:
  *         description: Signup successful, verification email sent

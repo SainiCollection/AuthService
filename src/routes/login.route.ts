@@ -19,6 +19,7 @@ const router = Router();
  *             required:
  *               - email
  *               - password
+ *               - app_name
  *             properties:
  *               email:
  *                 type: string
@@ -28,6 +29,9 @@ const router = Router();
  *                 type: string
  *                 format: password
  *                 example: yourPassword123
+ *              app_name:
+ *                type: string
+ *              example: MyApp
  *     responses:
  *       200:
  *         description: User logged in successfully
@@ -58,6 +62,8 @@ const router = Router();
  *                       type: string
  *                     lastName:
  *                       type: string
+ *                    appName: 
+ *                      type: string
  *       400:
  *         description: User not found
  *       401:

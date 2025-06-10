@@ -5,43 +5,93 @@ import crypto from "crypto";
 import pool from "../config/pgDatabase/dbConnect";
 import transporter from "../utils/transporter";
 
+// export const signup = async (req: Request, res: Response) => {
+//   try {
+//     const { firstName, lastName, email, password, app_name } = req.body;
+
+//     if (!firstName || !lastName || !email || !password || !app_name) { 
+//       return res
+//         .status(400)
+//         .json({ status: "error", message: "All fields are required" });
+//     }
+
+//     const result = await pool.query(`SELECT * FROM users WHERE email = $1`, [
+//       email,
+//     ]);
+
+//     if (result.rows.length > 0) {
+//       const existingUser = result.rows[0];
+
+//       if (existingUser.is_verified) {
+//         return res
+//           .status(401)
+//           .json({ status: "error", message: "User already exists and is verified!" });
+//       } else {
+//         // 🟡 Resend verification token
+//         const newVerificationToken = crypto.randomBytes(32).toString("hex");
+
+//         const updateQuery = `UPDATE users SET verification_token = $1 WHERE email = $2 RETURNING *`;
+//         const { rows } = await pool.query(updateQuery, [
+//           newVerificationToken,
+//           email,
+//         ]);
+
+//         const updatedUser = rows[0];
+//         const newVerificationUrl = `${process.env.BASE_URL_SERVER}/api/v1/auth/verify-email?emailVerifyToken=${newVerificationToken}`;
+
+//         await transporter.sendMail({
+//           from: `"Auth Service" <${process.env.SMTP_EMAIL}>`,
+//           to: updatedUser.email,
+//           subject: "Verify your email",
+//           html: `<p>Please verify your email by clicking <a href="${newVerificationUrl}">Click to Verify</a></p>`,
+//         });
+
+//         return res.status(200).json({
+//           status: "success",
+//           message: "Already registered but not verified. Verification email resent.",
+//         });
+//       }
+//     }
+
+//     // 🔒 Hash password and insert new user
+//     const user = await signupUser(firstName, lastName, email, password, app_name);
+//     return res.status(201).json({
+//       status: "success",
+//       message: "Signup successful! Please check your email to verify your account.",
+//     });
+
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ status: "error", message: "Signup failed" });
+//   }
+// };
 export const signup = async (req: Request, res: Response) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password, app_name } = req.body;
 
-    if (!firstName || !lastName || !email || !password ) { 
+    if (!firstName || !lastName || !email || !password || !app_name) {
       return res
         .status(400)
         .json({ status: "error", message: "All fields are required" });
     }
 
-    const result = await pool.query(`SELECT * FROM users WHERE email = $1`, [
-      email,
-    ]);
+    const result = await pool.query(`SELECT * FROM users WHERE email = $1`, [email]);
+    const existingUser = result.rows[0];
 
-    if (result.rows.length > 0) {
-      const existingUser = result.rows[0];
-
-      if (existingUser.is_verified) {
-        return res
-          .status(401)
-          .json({ status: "error", message: "User already exists and is verified!" });
-      } else {
-        // 🟡 Resend verification token
+    if (existingUser) {
+      if (!existingUser.is_verified) {
+        // 🔁 Resend verification token
         const newVerificationToken = crypto.randomBytes(32).toString("hex");
 
-        const updateQuery = `UPDATE users SET verification_token = $1 WHERE email = $2 RETURNING *`;
-        const { rows } = await pool.query(updateQuery, [
-          newVerificationToken,
-          email,
-        ]);
+        await pool.query(
+          `UPDATE users SET verification_token = $1 WHERE email = $2`,
+          [newVerificationToken, email]
+        );
 
-        const updatedUser = rows[0];
         const newVerificationUrl = `${process.env.BASE_URL_SERVER}/api/v1/auth/verify-email?emailVerifyToken=${newVerificationToken}`;
-
         await transporter.sendMail({
           from: `"Auth Service" <${process.env.SMTP_EMAIL}>`,
-          to: updatedUser.email,
+          to: existingUser.email,
           subject: "Verify your email",
           html: `<p>Please verify your email by clicking <a href="${newVerificationUrl}">Click to Verify</a></p>`,
         });
@@ -51,10 +101,18 @@ export const signup = async (req: Request, res: Response) => {
           message: "Already registered but not verified. Verification email resent.",
         });
       }
+
+      // ✅ User is verified → proceed to insert into user_app if needed
+      await signupUser(firstName, lastName, email, password, app_name);
+
+      return res.status(200).json({
+        status: "success",
+        message: "User already exists, new app access granted.",
+      });
     }
 
-    // 🔒 Hash password and insert new user
-    const user = await signupUser(firstName, lastName, email, password);
+    // 🆕 Brand new user
+    await signupUser(firstName, lastName, email, password, app_name);
     return res.status(201).json({
       status: "success",
       message: "Signup successful! Please check your email to verify your account.",
@@ -65,6 +123,7 @@ export const signup = async (req: Request, res: Response) => {
     return res.status(500).json({ status: "error", message: "Signup failed" });
   }
 };
+
 
 
 export const verifyEmail = async (req: Request, res: Response)  => {

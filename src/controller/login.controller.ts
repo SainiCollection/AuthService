@@ -1,16 +1,16 @@
 import { Request, Response } from "express";
 import jwtTokenGenerator from "../utils/jwtTokenGenerator";
-import { findUserByEmail, checkPassword, lockuserAccount, updateFailedLoginAttempts, resetFailedLoginAttempts } from "../service/login.service";
+import { findUserByEmail, checkPassword, lockuserAccount, updateFailedLoginAttempts, resetFailedLoginAttempts,findAppByUserIdAndAppName } from "../service/login.service";
 
 const MAX_FAILED_LOGIN_ATTEMPTS = 5;
 const LOCK_DURATION_MINUTES = 15;
 
 export const loginUser = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, app_name } = req.body;
 
     //----------------------------------------------------------------------------------check all feilds required
-    if (!email || !password) {
+    if (!email || !password || !app_name) {
       return res
         .status(401)
         .json({ status: "error", message: "All feilds are required" });
@@ -18,6 +18,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
     // -----------------------------------------------------------------------------find user
     const user = await findUserByEmail(email);
+    const appName = await findAppByUserIdAndAppName(user.id, app_name);
     if (!user) {
       return res
         .status(400)
@@ -87,7 +88,7 @@ export const loginUser = async (req: Request, res: Response) => {
     if (user.is_verified === true) {
       await resetFailedLoginAttempts(email);
       // Generate JWT token
-      const token = await jwtTokenGenerator(user.email);
+      const token = await jwtTokenGenerator(user.id, user.email, appName.app_name);
       return res.status(200).json({
         status: "success",
         token,
@@ -98,6 +99,7 @@ export const loginUser = async (req: Request, res: Response) => {
           username: user.username,
           firstName: user.first_name,
           lastName: user.last_name,
+          appName: appName.app_name,
         },
       });
     } else {
