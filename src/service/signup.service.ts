@@ -51,7 +51,8 @@ export const signupUser = async (
   lastName: string,
   email: string,
   password: string,
-  app_name: string
+  appName: string,
+  redirectUrl: string
 ) => {
   const emailLower = email.toLowerCase();
 
@@ -88,14 +89,14 @@ export const signupUser = async (
 
   // ✅ Step 4: Insert into user_app if not already exists
   const userAppExists = await pool.query(
-    `SELECT * FROM user_app WHERE user_id = $1 AND app_name = $2`,
-    [user.id, app_name]
+    `SELECT * FROM user_app WHERE user_id = $1 AND app_name = $2 AND redirect_url = $3`,
+    [user.id, appName, redirectUrl]
   );
 
   if (userAppExists.rows.length === 0) {
     await pool.query(
-      `INSERT INTO user_app (user_id, app_name) VALUES ($1, $2)`,
-      [user.id, app_name]
+      `INSERT INTO user_app (user_id, app_name, redirect_url) VALUES ($1, $2, $3)`,
+      [user.id, appName, redirectUrl]
     );
   }
 

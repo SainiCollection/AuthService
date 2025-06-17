@@ -7,9 +7,9 @@ import transporter from "../utils/transporter";
 
 // export const signup = async (req: Request, res: Response) => {
 //   try {
-//     const { firstName, lastName, email, password, app_name } = req.body;
+//     const { firstName, lastName, email, password, appName } = req.body;
 
-//     if (!firstName || !lastName || !email || !password || !app_name) { 
+//     if (!firstName || !lastName || !email || !password || !appName) { 
 //       return res
 //         .status(400)
 //         .json({ status: "error", message: "All fields are required" });
@@ -54,7 +54,7 @@ import transporter from "../utils/transporter";
 //     }
 
 //     // 🔒 Hash password and insert new user
-//     const user = await signupUser(firstName, lastName, email, password, app_name);
+//     const user = await signupUser(firstName, lastName, email, password, appName);
 //     return res.status(201).json({
 //       status: "success",
 //       message: "Signup successful! Please check your email to verify your account.",
@@ -67,9 +67,9 @@ import transporter from "../utils/transporter";
 // };
 export const signup = async (req: Request, res: Response) => {
   try {
-    const { firstName, lastName, email, password, app_name } = req.body;
+    const { firstName, lastName, email, password, appName, redirectUrl } = req.body;
 
-    if (!firstName || !lastName || !email || !password || !app_name) {
+    if (!firstName || !lastName || !email || !password || !appName || !redirectUrl) {
       return res
         .status(400)
         .json({ status: "error", message: "All fields are required" });
@@ -103,16 +103,25 @@ export const signup = async (req: Request, res: Response) => {
       }
 
       // ✅ User is verified → proceed to insert into user_app if needed
-      await signupUser(firstName, lastName, email, password, app_name);
+      const resUser = await signupUser(firstName, lastName, email, password, appName, redirectUrl);
 
       return res.status(200).json({
-        status: "success",
+        status: "user_exists",
         message: "User already exists, new app access granted.",
+        user:{
+          id: resUser.id,
+          email: resUser.email,
+          username: resUser.username,
+          firstName: resUser.first_name,
+          lastName: resUser.last_name,
+          appName: appName,
+          redirectUrl: redirectUrl
+        }
       });
     }
 
     // 🆕 Brand new user
-    await signupUser(firstName, lastName, email, password, app_name);
+    await signupUser(firstName, lastName, email, password, appName, redirectUrl);
     return res.status(201).json({
       status: "success",
       message: "Signup successful! Please check your email to verify your account.",
@@ -126,10 +135,10 @@ export const signup = async (req: Request, res: Response) => {
 
 
 
-export const verifyEmail = async (req: Request, res: Response)  => {
+export const verifyEmail = async (req: Request, res: Response) => {
   const { emailVerifyToken } = req.query;
   if (!emailVerifyToken) {
-    return res.status(400).send({ status: "error", message: "Missing token" });
+    return res.redirect(`${process.env.UI_URL}/email-verification?status=failed`);
   }
 
   const query = `UPDATE users SET is_verified = true, verification_token = NULL WHERE verification_token = $1 RETURNING *`;
@@ -137,10 +146,11 @@ export const verifyEmail = async (req: Request, res: Response)  => {
   const { rows } = await pool.query(query, values);
 
   if (rows.length === 0) {
-    return res
-      .status(401)
-      .send({ status: "error", message: "Invalid or expired token" });
+    return res.redirect(`${process.env.UI_URL}/email-verification?status=failed`);
   }
 
-  res.send("Email verified successfully!");
+  const user = rows[0];
+
+  // ✅ Redirect to UI with success and user ID
+  return res.redirect(`${process.env.UI_URL}/login?status=activation-success&id=${user.id}`);
 };

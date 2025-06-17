@@ -5,6 +5,7 @@ const userAppTable = async () => {
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     app_name VARCHAR(100) NOT NULL,
+    redirect_url VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
     UNIQUE (user_id, app_name),
