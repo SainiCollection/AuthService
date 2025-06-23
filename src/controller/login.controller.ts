@@ -102,7 +102,7 @@ export const loginUser = async (req: Request, res: Response) => {
     // 🟢 All good → Reset failed attempts and login
     await resetFailedLoginAttempts(email);
 
-    const token = await jwtTokenGenerator(user.id, user.email, appName.app_name);
+    const token = await jwtTokenGenerator(user.id, user.username, user.email, appName.app_name);
 
     return res.status(200).json({
       status: "success",

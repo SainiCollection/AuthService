@@ -77,7 +77,7 @@ export const signupUser = async (
       INSERT INTO users (username, first_name, last_name, email, password, verification_token)
       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *
     `;
-    const values = [uniqueUsername, firstName, lastName, emailLower, hashedPassword, verificationToken];
+    const values = [uniqueUsername.toLowerCase(), firstName, lastName, emailLower, hashedPassword, verificationToken];
     const { rows } = await pool.query(insertUserQuery, values);
     user = rows[0];
     isNewUser = true;
