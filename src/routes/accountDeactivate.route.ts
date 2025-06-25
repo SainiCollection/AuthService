@@ -1,5 +1,5 @@
 import { deactivateUserAccount, reactivateUserAccount } from "../controller/accountDeactivate.controller";
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 
 const router = Router();
 
@@ -96,7 +96,9 @@ const router = Router();
  *                   example: Internal server error
  */
 
-router.post("/api/v1/auth/deactivate-account", deactivateUserAccount);
+router.post("/api/v1/auth/deactivate-account", (req:Request, res:Response)=>{
+    deactivateUserAccount(req, res)
+} );
 
 
 /**
@@ -186,6 +188,8 @@ router.post("/api/v1/auth/deactivate-account", deactivateUserAccount);
  *                   example: Internal server error
  */
 
-router.post("/api/v1/auth/reactivate-account", reactivateUserAccount);
+router.post("/api/v1/auth/reactivate-account", (req:Request, res:Response)=>{
+    reactivateUserAccount(req, res)
+} );
 
 export default router;

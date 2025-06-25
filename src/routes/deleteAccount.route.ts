@@ -1,5 +1,5 @@
 import { deleteUserAccount, recoverDeletedUserAccount } from "../controller/deleteAccount.controller";
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 
 const router = Router();
 
@@ -64,7 +64,9 @@ const router = Router();
  *                   example: Internal server error
  */
 
-router.delete("/api/v1/auth/delete-account", deleteUserAccount);
+router.delete("/api/v1/auth/delete-account", (req:Request, res:Response)=>{
+    deleteUserAccount(req, res)
+} );
 
 /**
  * @swagger
@@ -127,6 +129,8 @@ router.delete("/api/v1/auth/delete-account", deleteUserAccount);
  *                   example: Internal server error
  */
 
-router.post("/api/v1/auth/recover-account", recoverDeletedUserAccount);
+router.post("/api/v1/auth/recover-account", (req:Request, res:Response)=>{
+    recoverDeletedUserAccount(req, res)
+} );
 
 export default router;

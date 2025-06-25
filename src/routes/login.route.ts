@@ -1,5 +1,5 @@
 import { loginUser } from "../controller/login.controller";
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 
 const router = Router();
 
@@ -84,6 +84,8 @@ const router = Router();
  *         description: Server error
  */
 
-router.post("/api/v1/auth/login", loginUser);
+router.post("/api/v1/auth/login", (req:Request, res:Response)=>{
+    loginUser(req, res)
+} );
 
 export default router;

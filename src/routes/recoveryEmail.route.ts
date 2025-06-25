@@ -1,5 +1,5 @@
 import { recoveryUserEmail } from "../controller/recoveryEmail.controller";
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 const router = Router();
 
 /**
@@ -70,5 +70,7 @@ const router = Router();
  *                   example: Internal server error
  */
 
-router.post("/api/v1/auth/recovery-email", recoveryUserEmail);
+router.post("/api/v1/auth/recovery-email", (req:Request, res:Response)=>{
+    recoveryUserEmail(req, res)
+} );
 export default router;

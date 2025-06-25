@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import { signup, verifyEmail } from '../controller/signup.controller';
 
 const router = Router();
@@ -112,7 +112,9 @@ const router = Router();
  *                   example: Signup failed
  */
 
-router.post("/api/v1/auth/signup", signup)
+router.post("/api/v1/auth/signup", (req: Request, res: Response) => {
+    signup(req, res)
+})
 
 /**
  * @swagger
@@ -167,6 +169,8 @@ router.post("/api/v1/auth/signup", signup)
  *                   example: Invalid or expired token
  */
 
-router.get("/api/v1/auth/verify-email", verifyEmail)
+router.get("/api/v1/auth/verify-email", (req: Request, res: Response) => {
+    verifyEmail(req, res)
+})
 
 export default router;

@@ -1,5 +1,5 @@
 import { suspendUserAccount, reactivateSuspendedUserAccount } from "../controller/suspendAccount.controller";
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 
 const router = Router();
 
@@ -70,7 +70,9 @@ const router = Router();
  *                   example: Internal server error
  */
 
-router.post("/api/v1/auth/suspend-account", suspendUserAccount);
+router.post("/api/v1/auth/suspend-account", (req: Request, res: Response) => {
+    suspendUserAccount(req, res)
+} );
 
 /**
  * @swagger
@@ -134,5 +136,7 @@ router.post("/api/v1/auth/suspend-account", suspendUserAccount);
  *                   example: Internal server error
  */
 
-router.post("/api/v1/auth/unsuspend-account", reactivateSuspendedUserAccount);
+router.post("/api/v1/auth/unsuspend-account", (req: Request, res: Response) => {
+    reactivateSuspendedUserAccount(req, res)
+}  );
 export default router;

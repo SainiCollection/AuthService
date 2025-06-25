@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import { forgotPassword, resetPassword } from "../controller/forgotPassword.controller";
 
 const router = Router();
@@ -56,7 +56,9 @@ const router = Router();
  *                   example: Email is required
  */
 
-router.post('/api/v1/auth/forgot-password', forgotPassword)
+router.post('/api/v1/auth/forgot-password', (req:Request, res:Response)=>{
+    forgotPassword(req, res)
+} )
 
 
 /**
@@ -113,6 +115,8 @@ router.post('/api/v1/auth/forgot-password', forgotPassword)
  *                   example: Token and new password are required
  */
 
-router.post('/api/v1/auth/reset-password', resetPassword)
+router.post('/api/v1/auth/reset-password', (req:Request, res:Response)=>{
+    resetPassword(req, res)
+} )
 
 export default router
