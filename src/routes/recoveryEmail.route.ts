@@ -1,14 +1,22 @@
 import { recoveryUserEmail } from "../controller/recoveryEmail.controller";
 import { Request, Response, Router } from "express";
+
 const router = Router();
 
 /**
  * @swagger
- * /api/v1/auth/recovery-email:
+ * tags:
+ *   name: User
+ *   description: User profile and account utilities
+ */
+
+/**
+ * @swagger
+ * /recovery-email:
  *   post:
  *     summary: Update user's recovery email
  *     tags: [User]
- *     description: Updates the recovery email address for the specified user.
+ *     description: Updates the recovery email address for a user account.
  *     requestBody:
  *       required: true
  *       content:
@@ -69,8 +77,8 @@ const router = Router();
  *                   type: string
  *                   example: Internal server error
  */
+router.post("/recovery-email", (req: Request, res: Response) => {
+  recoveryUserEmail(req, res);
+});
 
-router.post("/api/v1/auth/recovery-email", (req:Request, res:Response)=>{
-    recoveryUserEmail(req, res)
-} );
 export default router;

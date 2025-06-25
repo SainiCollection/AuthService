@@ -1,15 +1,25 @@
-import { suspendUserAccount, reactivateSuspendedUserAccount } from "../controller/suspendAccount.controller";
-import { Request, Response, Router } from "express";
+import { Router, Request, Response } from "express";
+import {
+  suspendUserAccount,
+  reactivateSuspendedUserAccount,
+} from "../controller/suspendAccount.controller";
 
 const router = Router();
 
 /**
  * @swagger
- * /api/v1/auth/suspend-account:
+ * tags:
+ *   name: User
+ *   description: User account suspension management
+ */
+
+/**
+ * @swagger
+ * /suspend-account:
  *   post:
  *     summary: Suspend a user account
  *     tags: [User]
- *     description: Suspend a user account by providing user ID and suspend reason.
+ *     description: Suspend a user account by providing the user ID and a suspend reason.
  *     requestBody:
  *       required: true
  *       content:
@@ -26,8 +36,8 @@ const router = Router();
  *                 example: "123"
  *               suspendReason:
  *                 type: string
- *                 description: Reason for suspending the user account
- *                 example: "Violation of terms"
+ *                 description: Reason for suspension
+ *                 example: "Violation of community guidelines"
  *     responses:
  *       200:
  *         description: User account suspended successfully
@@ -43,7 +53,7 @@ const router = Router();
  *                   type: string
  *                   example: User account suspended successfully
  *       400:
- *         description: Missing user ID or suspend reason
+ *         description: Missing or invalid fields
  *         content:
  *           application/json:
  *             schema:
@@ -69,18 +79,17 @@ const router = Router();
  *                   type: string
  *                   example: Internal server error
  */
-
-router.post("/api/v1/auth/suspend-account", (req: Request, res: Response) => {
-    suspendUserAccount(req, res)
-} );
+router.post("/suspend-account", (req: Request, res: Response) => {
+  suspendUserAccount(req, res);
+});
 
 /**
  * @swagger
- * /api/v1/auth/unsuspend-account:
+ * /unsuspend-account:
  *   post:
  *     summary: Reactivate a suspended user account
  *     tags: [User]
- *     description: Reactivates a previously suspended user account by user ID.
+ *     description: Reactivates a previously suspended user account by providing the user ID.
  *     requestBody:
  *       required: true
  *       content:
@@ -109,7 +118,7 @@ router.post("/api/v1/auth/suspend-account", (req: Request, res: Response) => {
  *                   type: string
  *                   example: User account reactivated successfully
  *       400:
- *         description: User ID is required
+ *         description: Missing user ID
  *         content:
  *           application/json:
  *             schema:
@@ -135,8 +144,8 @@ router.post("/api/v1/auth/suspend-account", (req: Request, res: Response) => {
  *                   type: string
  *                   example: Internal server error
  */
+router.post("/unsuspend-account", (req: Request, res: Response) => {
+  reactivateSuspendedUserAccount(req, res);
+});
 
-router.post("/api/v1/auth/unsuspend-account", (req: Request, res: Response) => {
-    reactivateSuspendedUserAccount(req, res)
-}  );
 export default router;

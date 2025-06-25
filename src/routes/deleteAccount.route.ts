@@ -5,7 +5,14 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/auth/delete-account:
+ * tags:
+ *   name: Auth
+ *   description: Authentication endpoints
+ */
+
+/**
+ * @swagger
+ * /delete-account:
  *   delete:
  *     summary: Delete a user account
  *     tags: [Auth]
@@ -21,6 +28,7 @@ const router = Router();
  *             properties:
  *               id:
  *                 type: integer
+ *                 description: ID of the user to delete
  *                 example: 123
  *     responses:
  *       200:
@@ -63,14 +71,13 @@ const router = Router();
  *                   type: string
  *                   example: Internal server error
  */
-
-router.delete("/api/v1/auth/delete-account", (req:Request, res:Response)=>{
-    deleteUserAccount(req, res)
-} );
+router.delete("/delete-account", (req: Request, res: Response) => {
+  deleteUserAccount(req, res);
+});
 
 /**
  * @swagger
- * /api/v1/auth/recover-account:
+ * /recover-account:
  *   post:
  *     summary: Recover a deleted user account
  *     tags: [Auth]
@@ -86,6 +93,7 @@ router.delete("/api/v1/auth/delete-account", (req:Request, res:Response)=>{
  *             properties:
  *               id:
  *                 type: integer
+ *                 description: ID of the user to recover
  *                 example: 123
  *     responses:
  *       200:
@@ -128,9 +136,8 @@ router.delete("/api/v1/auth/delete-account", (req:Request, res:Response)=>{
  *                   type: string
  *                   example: Internal server error
  */
-
-router.post("/api/v1/auth/recover-account", (req:Request, res:Response)=>{
-    recoverDeletedUserAccount(req, res)
-} );
+router.post("/recover-account", (req: Request, res: Response) => {
+  recoverDeletedUserAccount(req, res);
+});
 
 export default router;

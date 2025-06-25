@@ -39,30 +39,30 @@ app.use('/api/v1/auth/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/',defaultRoute)
 
 // signup root -------------------------------------------------------------------SIGNUP ROUTE "/api/v1/auth/signup"
-app.use("/",signupRoute)
+app.use("/api/v1/auth",signupRoute)
 // signup(app, pool)
 
 // login route--------------------------------------------------------------------LOGIN ROUTE "/api/v1/auth/signup"
-app.use("/", loginRoute)
+app.use("/api/v1/auth", loginRoute)
 
 // forgot password route----------------------------------------------------------FORGOT PASSWORD '/api/v1/auth/forgotpsd'
-app.use('/',forgotPasswordRoute)
-app.use('/',resetPasswordRoute)
+app.use('/api/v1/auth',forgotPasswordRoute)
+app.use('/api/v1/auth',resetPasswordRoute)
 
 // deactivate account route----------------------------------------------------DEACTIVATE ACCOUNT '/api/v1/auth/deactivate-account'
-app.use('/',deactivateUserAccountRoute)
-app.use('/',reactivateUserAccountRoute)
+app.use('/api/v1/auth',deactivateUserAccountRoute)
+app.use('/api/v1/auth',reactivateUserAccountRoute)
 
 // delete account route----------------------------------------------------DELETE ACCOUNT '/api/v1/auth/delete-account'
-app.use('/',deleteAccountService)
-app.use('/',recoverAccountRoute)
+app.use('/api/v1/auth',deleteAccountService)
+app.use('/api/v1/auth',recoverAccountRoute)
 
 // suspend account route----------------------------------------------------SUSPEND ACCOUNT '/api/v1/auth/suspend-account'
-app.use('/',suspendAccountRoute)
-app.use('/',unsuspendAccountRoute)
+app.use('/api/v1/auth',suspendAccountRoute)
+app.use('/api/v1/auth',unsuspendAccountRoute)
 
 // recovery Email route----------------------------------------------------RECOVERY EMAIL '/api/v1/auth/recovery-email'
-app.use('/', recoveryEmailRoute)
+app.use('/api/v1/auth', recoveryEmailRoute)
 
 
 server.listen(PORT, () => {

@@ -1,19 +1,22 @@
 import { Request, Response, Router } from "express";
-import { signup, verifyEmail } from '../controller/signup.controller';
+import { signup, verifyEmail } from "../controller/signup.controller";
 
 const router = Router();
 
 /**
  * @swagger
- * /api/v1/auth/signup:
+ * tags:
+ *   name: Auth
+ *   description: Authentication and verification endpoints
+ */
+
+/**
+ * @swagger
+ * /signup:
  *   post:
  *     summary: Register a new user
  *     tags: [Auth]
- *     description: |
- *       Registers a new user.
- *       - If the email is already registered and verified, returns an error.
- *       - If the email is registered but not verified, a new verification email is sent.
- *       - If not registered, creates the user and sends a verification email.
+ *     description: Register a new user. Handles existing users (verified and unverified), sends email verification.
  *     requestBody:
  *       required: true
  *       content:
@@ -25,7 +28,8 @@ const router = Router();
  *               - lastName
  *               - email
  *               - password
- *               - app_name
+ *               - appName
+ *               - redirectUrl
  *             properties:
  *               firstName:
  *                 type: string
@@ -40,10 +44,13 @@ const router = Router();
  *               password:
  *                 type: string
  *                 format: password
- *                 example: Password123!
- *              app_name:
- *                type: string
- *               example: MyApp
+ *                 example: StrongPass123!
+ *               appName:
+ *                 type: string
+ *                 example: PortfolioApp
+ *               redirectUrl:
+ *                 type: string
+ *                 example: https://portfolio.example.com
  *     responses:
  *       201:
  *         description: Signup successful, verification email sent
@@ -93,10 +100,27 @@ const router = Router();
  *               properties:
  *                 status:
  *                   type: string
- *                   example: error
+ *                   example: user_exists
  *                 message:
  *                   type: string
- *                   example: User already exists and is verified!
+ *                   example: User already exists, new app access granted.
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     username:
+ *                       type: string
+ *                     firstName:
+ *                       type: string
+ *                     lastName:
+ *                       type: string
+ *                     appName:
+ *                       type: string
+ *                     redirectUrl:
+ *                       type: string
  *       500:
  *         description: Internal server error
  *         content:
@@ -111,36 +135,32 @@ const router = Router();
  *                   type: string
  *                   example: Signup failed
  */
-
-router.post("/api/v1/auth/signup", (req: Request, res: Response) => {
-    signup(req, res)
-})
+router.post("/signup", (req: Request, res: Response) => {
+  signup(req, res);
+});
 
 /**
  * @swagger
- * /api/v1/auth/verify-email:
+ * /verify-email:
  *   get:
- *     summary: Verify a user's email
+ *     summary: Verify email using token
  *     tags: [Auth]
- *     description: |
- *       Verifies a user's email using a token provided as a query parameter.
- *       - If the token is missing or invalid, an error is returned.
- *       - If the token is valid, the user is marked as verified.
+ *     description: Verifies a user's email using a token provided in the query parameter.
  *     parameters:
  *       - in: query
  *         name: emailVerifyToken
  *         required: true
  *         schema:
  *           type: string
- *         description: Email verification token
+ *         description: Email verification token sent to the user
  *     responses:
  *       200:
- *         description: Email verified successfully
+ *         description: Email verified successfully (redirects to frontend)
  *         content:
- *           text/plain:
+ *           text/html:
  *             schema:
  *               type: string
- *               example: Email verified successfully!
+ *               example: Redirect to frontend success page
  *       400:
  *         description: Missing token
  *         content:
@@ -168,9 +188,8 @@ router.post("/api/v1/auth/signup", (req: Request, res: Response) => {
  *                   type: string
  *                   example: Invalid or expired token
  */
-
-router.get("/api/v1/auth/verify-email", (req: Request, res: Response) => {
-    verifyEmail(req, res)
-})
+router.get("/verify-email", (req: Request, res: Response) => {
+  verifyEmail(req, res);
+});
 
 export default router;

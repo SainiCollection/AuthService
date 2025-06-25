@@ -5,7 +5,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/auth/deactivate-account:
+ * /deactivate-account:
  *   post:
  *     summary: Deactivate a user account
  *     tags: [Auth]
@@ -24,9 +24,11 @@ const router = Router();
  *             properties:
  *               id:
  *                 type: integer
+ *                 description: User ID to deactivate
  *                 example: 123
  *               deactivateReason:
  *                 type: string
+ *                 description: Reason for deactivation
  *                 example: "User requested deactivation"
  *     responses:
  *       200:
@@ -95,15 +97,13 @@ const router = Router();
  *                   type: string
  *                   example: Internal server error
  */
-
-router.post("/api/v1/auth/deactivate-account", (req:Request, res:Response)=>{
-    deactivateUserAccount(req, res)
-} );
-
+router.post("/deactivate-account", (req: Request, res: Response) => {
+  deactivateUserAccount(req, res);
+});
 
 /**
  * @swagger
- * /api/v1/auth/reactivate-account:
+ * /reactivate-account:
  *   post:
  *     summary: Reactivate a user account
  *     tags: [Auth]
@@ -119,6 +119,7 @@ router.post("/api/v1/auth/deactivate-account", (req:Request, res:Response)=>{
  *             properties:
  *               id:
  *                 type: integer
+ *                 description: ID of the user to reactivate
  *                 example: 123
  *     responses:
  *       200:
@@ -187,9 +188,8 @@ router.post("/api/v1/auth/deactivate-account", (req:Request, res:Response)=>{
  *                   type: string
  *                   example: Internal server error
  */
-
-router.post("/api/v1/auth/reactivate-account", (req:Request, res:Response)=>{
-    reactivateUserAccount(req, res)
-} );
+router.post("/reactivate-account", (req: Request, res: Response) => {
+  reactivateUserAccount(req, res);
+});
 
 export default router;

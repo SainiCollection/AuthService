@@ -12,11 +12,11 @@ const options = {
     },
     servers: [
       {
-        url: `${process.env.BASE_URL_SERVER}`,
+        url: `${process.env.BASE_URL_SERVER}/api/v1/auth`,
       },
     ],
   },
-  apis: [`./src/routes/*.route.js`],
+  apis: [`./src/routes/*.route.ts`],
 };
 
 const swaggerSpec = swaggerJsDoc(options);

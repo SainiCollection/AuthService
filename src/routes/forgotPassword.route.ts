@@ -5,11 +5,18 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/auth/forgot-password:
+ * tags:
+ *   name: Auth
+ *   description: Authentication endpoints
+ */
+
+/**
+ * @swagger
+ * /forgot-password:
  *   post:
  *     summary: Initiate password reset
  *     tags: [Auth]
- *     description: Sends a password reset link to the user's email. Optionally, a recovery email can be used if available.
+ *     description: Sends a reset link to the user's email (primary or recovery email).
  *     requestBody:
  *       required: true
  *       content:
@@ -25,7 +32,7 @@ const router = Router();
  *                 example: user@example.com
  *               useRecoveryEmail:
  *                 type: boolean
- *                 description: Whether to send the reset link to a recovery email
+ *                 description: Send reset link to recovery email if true
  *                 example: true
  *     responses:
  *       201:
@@ -55,19 +62,17 @@ const router = Router();
  *                   type: string
  *                   example: Email is required
  */
-
-router.post('/api/v1/auth/forgot-password', (req:Request, res:Response)=>{
-    forgotPassword(req, res)
-} )
-
+router.post("/forgot-password", (req: Request, res: Response) => {
+  forgotPassword(req, res);
+});
 
 /**
  * @swagger
- * /api/v1/auth/reset-password:
+ * /reset-password:
  *   post:
  *     summary: Reset user password
  *     tags: [Auth]
- *     description: Resets the user's password using a valid reset token.
+ *     description: Resets the user's password using a valid token sent via email.
  *     requestBody:
  *       required: true
  *       content:
@@ -80,12 +85,12 @@ router.post('/api/v1/auth/forgot-password', (req:Request, res:Response)=>{
  *             properties:
  *               resetPasswordToken:
  *                 type: string
- *                 description: The password reset token sent to the user's email
- *                 example: "e3f3f9909e2b2c8e4d62db847f30dc27"
+ *                 description: Token sent to the user’s email
+ *                 example: "abc123def456ghi789"
  *               newPassword:
  *                 type: string
- *                 description: The new password to be set
- *                 example: "MyNewSecurePassword123!"
+ *                 description: New password to set
+ *                 example: "NewSecurePassword@123"
  *     responses:
  *       201:
  *         description: Password reset successful
@@ -113,10 +118,22 @@ router.post('/api/v1/auth/forgot-password', (req:Request, res:Response)=>{
  *                 message:
  *                   type: string
  *                   example: Token and new password are required
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 message:
+ *                   type: string
+ *                   example: Reset failed
  */
+router.post("/reset-password", (req: Request, res: Response) => {
+  resetPassword(req, res);
+});
 
-router.post('/api/v1/auth/reset-password', (req:Request, res:Response)=>{
-    resetPassword(req, res)
-} )
-
-export default router
+export default router;
