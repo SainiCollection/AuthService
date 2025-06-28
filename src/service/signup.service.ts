@@ -83,6 +83,7 @@ export const signupUser = async (
     isNewUser = true;
 
     // ✉️ Send verification email only for new users
+    console.log(`server url -> ${process.env.BASE_URL_SERVER}`)
     const verificationUrl = `${process.env.BASE_URL_SERVER}/api/v1/auth/verify-email?emailVerifyToken=${verificationToken}`;
     await sendVerificationEmail(user.email, verificationUrl);
   }
