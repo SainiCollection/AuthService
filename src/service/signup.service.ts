@@ -52,7 +52,6 @@ export const signupUser = async (
   email: string,
   password: string,
   appName: string,
-  redirectUrl: string
 ) => {
   const emailLower = email.toLowerCase();
 
@@ -90,14 +89,14 @@ export const signupUser = async (
 
   // ✅ Step 4: Insert into user_app if not already exists
   const userAppExists = await pool.query(
-    `SELECT * FROM user_app WHERE user_id = $1 AND app_name = $2 AND redirect_url = $3`,
-    [user.id, appName, redirectUrl]
+    `SELECT * FROM user_app WHERE user_id = $1 AND app_name = $2`,
+    [user.id, appName, ]
   );
 
   if (userAppExists.rows.length === 0) {
     await pool.query(
-      `INSERT INTO user_app (user_id, app_name, redirect_url) VALUES ($1, $2, $3)`,
-      [user.id, appName, redirectUrl]
+      `INSERT INTO user_app (user_id, app_name) VALUES ($1, $2)`,
+      [user.id, appName ]
     );
   }
 
@@ -109,7 +108,7 @@ const sendVerificationEmail = async (to: string, url: string) => {
   transporter;
 
   await transporter.sendMail({
-    from: `"Auth Service" <${process.env.SMTP_EMAIL}>`,
+    from: `"DriveOSx" <${process.env.SMTP_EMAIL}>`,
     to,
     subject: "Verify your email",
     html: `<p>Please verify your email by clicking <a href="${url}" > Click to Verify </a>   </p>`,

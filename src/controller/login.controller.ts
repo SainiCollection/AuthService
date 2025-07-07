@@ -14,10 +14,10 @@ const LOCK_DURATION_MINUTES = 15;
 
 export const loginUser = async (req: Request, res: Response) => {
   try {
-    const { email, password, app_name, redirect_url } = req.body;
+    const { email, password, app_name  } = req.body;
 
     // 🛑 Validate fields
-    if (!email || !password || !app_name || !redirect_url) {
+    if (!email || !password || !app_name ) {
       return res.status(200).json({
         status: "fill_all_feilds",
         message: "All fields are required"
@@ -35,7 +35,7 @@ export const loginUser = async (req: Request, res: Response) => {
     }
 
     // 🔍 Then find app mapping
-    const appName = await findAppByUserIdAndAppName(user.id, app_name, redirect_url);
+    const appName = await findAppByUserIdAndAppName(user.id, app_name );
 
     // 🔒 Check if account is locked
     if (
@@ -115,7 +115,7 @@ export const loginUser = async (req: Request, res: Response) => {
         firstName: user.first_name,
         lastName: user.last_name,
         appName: appName.app_name,
-        redirectUrl: appName.redirect_url
+        
       }
     });
 

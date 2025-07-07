@@ -27,7 +27,6 @@ const router = Router();
  *               - email
  *               - password
  *               - app_name
- *               - redirect_url
  *             properties:
  *               email:
  *                 type: string
@@ -40,9 +39,6 @@ const router = Router();
  *               app_name:
  *                 type: string
  *                 example: MyApp
- *               redirect_url:
- *                 type: string
- *                 example: https://myapp.com/callback
  *     responses:
  *       200:
  *         description: Login response (success or conditional errors)

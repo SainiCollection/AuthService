@@ -67,9 +67,9 @@ import transporter from "../utils/transporter";
 // };
 export const signup = async (req: Request, res: Response) => {
   try {
-    const { firstName, lastName, email, password, appName, redirectUrl } = req.body;
+    const { firstName, lastName, email, password, appName  } = req.body;
 
-    if (!firstName || !lastName || !email || !password || !appName || !redirectUrl) {
+    if (!firstName || !lastName || !email || !password || !appName ) {
       return res
         .status(400)
         .json({ status: "error", message: "All fields are required" });
@@ -103,7 +103,7 @@ export const signup = async (req: Request, res: Response) => {
       }
 
       // ✅ User is verified → proceed to insert into user_app if needed
-      const resUser = await signupUser(firstName, lastName, email, password, appName, redirectUrl);
+      const resUser = await signupUser(firstName, lastName, email, password, appName );
 
       return res.status(200).json({
         status: "user_exists",
@@ -115,13 +115,12 @@ export const signup = async (req: Request, res: Response) => {
           firstName: resUser.first_name,
           lastName: resUser.last_name,
           appName: appName,
-          redirectUrl: redirectUrl
         }
       });
     }
 
     // 🆕 Brand new user
-    await signupUser(firstName, lastName, email, password, appName, redirectUrl);
+    await signupUser(firstName, lastName, email, password, appName );
     return res.status(201).json({
       status: "success",
       message: "Signup successful! Please check your email to verify your account.",

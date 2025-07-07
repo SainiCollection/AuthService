@@ -29,7 +29,6 @@ const router = Router();
  *               - email
  *               - password
  *               - appName
- *               - redirectUrl
  *             properties:
  *               firstName:
  *                 type: string
@@ -48,9 +47,6 @@ const router = Router();
  *               appName:
  *                 type: string
  *                 example: PortfolioApp
- *               redirectUrl:
- *                 type: string
- *                 example: https://portfolio.example.com
  *     responses:
  *       201:
  *         description: Signup successful, verification email sent
@@ -119,7 +115,7 @@ const router = Router();
  *                       type: string
  *                     appName:
  *                       type: string
- *                     redirectUrl:
+ *                     :
  *                       type: string
  *       500:
  *         description: Internal server error

@@ -10,8 +10,8 @@ export const findUserByEmail = async (email: string) => {
 };
 
 // Functino to find a app_name bu user id and app_name
-export const findAppByUserIdAndAppName = async (user_id:number, app_name:string, redirect_url:string)=>{
-  const query = await pool.query(`SELECT * FROM user_app WHERE user_id = $1 AND app_name = $2 AND redirect_url = $3`,[user_id, app_name,redirect_url]);
+export const findAppByUserIdAndAppName = async (user_id:number, app_name:string)=>{
+  const query = await pool.query(`SELECT * FROM user_app WHERE user_id = $1 AND app_name = $2`,[user_id, app_name]);
   return query.rows[0];
 }
 
