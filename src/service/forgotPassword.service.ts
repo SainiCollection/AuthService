@@ -26,7 +26,7 @@ export const handleForgotPassword = async (email: string, useRecoveryEmail:false
 
   const resetLink = `${process.env.UI_URL}/reset-password?resetPasswordToken=${token}`; // chage this to front end url
   await transporter.sendMail({
-    from: `"Auth Service" <${process.env.SMTP_EMAIL}>`,
+    from: `"Drive OSx" <${process.env.SMTP_EMAIL}>`,
     to: useRecoveryEmail ? user.recovery_email : user.email,
     subject: "Reset your password",
     html: `<p>Click <a href="${resetLink}">here</a> to reset your password. Link expires in 15 minutes.</p>`,
